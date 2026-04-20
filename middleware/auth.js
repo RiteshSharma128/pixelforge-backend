@@ -23,12 +23,20 @@ const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expires
 
 const sendToken = (user, statusCode, res, message = 'Success') => {
   const token = generateToken(user._id);
+  // res.cookie('pf_token', token, {
+  //   httpOnly: true,
+  //   secure: process.env.NODE_ENV === 'production',
+  //   sameSite: 'lax',
+  //   maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+  // });
+
   res.cookie('pf_token', token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+    secure: true,       
+    sameSite: 'none',    
+    maxAge: 30 * 24 * 60 * 60 * 1000
   });
+
   res.status(statusCode).json({ success: true, message, token, user: user.toSafeObject() });
 };
 
