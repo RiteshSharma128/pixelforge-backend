@@ -33,7 +33,8 @@ const sendToken = (user, statusCode, res, message = 'Success') => {
   res.cookie('pf_token', token, {
     httpOnly: true,
     secure: true,       
-    sameSite: 'none',    
+    sameSite: 'none', 
+     path: '/', 
     maxAge: 30 * 24 * 60 * 60 * 1000
   });
 
