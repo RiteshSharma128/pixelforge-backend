@@ -98,35 +98,21 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
-
 const app = express();
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 
-// 🔥 FINAL CORS CONFIG
-const allowedOrigins = [
-  'http://localhost:5173',
-  'https://pixelforge-ritesh-sharma.vercel.app'
-];
+// 🔥 FINAL SIMPLE CORS (NO FUNCTION)
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'https://pixelforge-ritesh-sharma.vercel.app'
+  ],
+  credentials: true
+}));
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      return callback(null, false); // ❗ error throw मत करो
-    }
-  },
-  credentials: true,
-  methods: ['GET','POST','PUT','DELETE','PATCH','OPTIONS'],
-  allowedHeaders: ['Content-Type','Authorization'],
-  optionsSuccessStatus: 204
-};
-
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // 🔥 preflight fix
+// 🔥 IMPORTANT preflight
+app.options('*', cors());
 
 // BODY + COOKIES
 app.use(express.json({ limit: '15mb' }));
